@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-inter bg-black text-white;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px #39ff14; }
+  50% { box-shadow: 0 0 20px #39ff14, 0 0 30px #39ff14; }
+}
+
+@keyframes consciousness-flow {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite alternate;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-consciousness-flow {
+  animation: consciousness-flow 3s ease-in-out infinite;
+}
+
+.nebula-bg {
+  background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 11, 46, 0.8) 50%, rgba(15, 15, 15, 1) 100%);
+}
