@@ -34,6 +34,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
         }`}
       >
         <p className="text-sm">{message}</p>
+
         <div className="flex items-center justify-between mt-2">
           <span className="text-xs opacity-70">
             {timestamp instanceof Date
@@ -54,7 +55,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             )}
           </div>
         </div>
-        
+
         {!isUser && (
           <>
             {/* Reasoning Buttons */}
@@ -78,10 +79,24 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                 Business
               </button>
             </div>
-            
+
             {/* Contextual Buttons */}
             <div className="flex flex-wrap gap-1 mt-2">
               {contextualButtons.map((button, index) => (
                 <button
                   key={index}
-                  className="px-2 py-1 bg-deep-purple border bo
+                  className="px-2 py-1 bg-deep-purple bg-opacity-20 text-deep-purple text-xs rounded hover:bg-opacity-30 transition-colors flex items-center gap-1"
+                >
+                  <span>{button.emoji}</span>
+                  <span>{button.label}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default MessageBubble;
