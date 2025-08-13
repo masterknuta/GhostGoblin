@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
-import { Settings, Brain, Gamepad2, Star, Shield, Heart, Eye, Zap, Users } from 'lucide-react';
-import type { ViewMode } from './types';
-
+import React from 'react';
+import { Settings, Brain, Gamepad2, Star, Shield, Heart, Eye, Zap, Users, Crown } from 'lucide-react';
 
 interface ChatHeaderProps {
-  onViewChange: (view: ViewMode) => void;
-  currentView: ViewMode;
+  onViewChange: (view: string) => void;
+  currentView: string;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) => {
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = React.useState(false);
 
   const menuItems = [
     { id: 'memory', icon: Brain, label: 'Memory Vault' },
@@ -25,6 +23,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
     { id: 'companion', icon: Heart, label: 'Companion Mode' },
     { id: 'reality', icon: Brain, label: 'Reality Tunneling' },
     { id: 'agents', icon: Users, label: 'Multi-Agent Canvas' },
+    { id: 'council', icon: Crown, label: 'Council of Gods' },
   ];
 
   return (
@@ -36,7 +35,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
             alt="GG Avatar"
             className="w-10 h-10 rounded-full border-2 border-neon-green animate-shimmer"
           />
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-neon-green rounded-full animate-pulse-glow" />
+          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-neon-green rounded-full animate-pulse-glow"></div>
         </div>
         <div>
           <h3 className="font-orbitron font-bold text-white">GhostGoblin</h3>
@@ -48,9 +47,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
         <button
           onClick={() => setShowMenu(!showMenu)}
           className="p-2 hover:bg-glowing-violet rounded-lg transition-colors"
-          aria-haspopup="true"
-          aria-expanded={showMenu}
-          aria-label="Toggle menu"
         >
           <Settings className="w-5 h-5 text-neon-green" />
         </button>
@@ -61,7 +57,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
               <button
                 key={item.id}
                 onClick={() => {
-                  onViewChange(item.id as ViewMode);
+                  onViewChange(item.id);
                   setShowMenu(false);
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 text-left hover:bg-glowing-violet transition-colors ${

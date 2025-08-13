@@ -17,8 +17,9 @@ import ConfidenceRater from './components/confidence/ConfidenceRater';
 import CompanionMode from './components/companion/CompanionMode';
 import RealityTunneling from './components/reality/RealityTunneling';
 import MultiAgentCanvas from './components/MultiAgentCanvas';
+import CouncilMode from './components/CouncilMode';
 
-type ViewMode = 'chat' | 'memory' | 'hangman' | 'roulette' | 'riddle' | 'duel' | 'truth' | 'thisorthat' | 'astrology' | 'security' | 'confidence' | 'companion' | 'reality' | 'agents';
+type ViewMode = 'chat' | 'memory' | 'hangman' | 'roulette' | 'riddle' | 'duel' | 'truth' | 'thisorthat' | 'astrology' | 'security' | 'confidence' | 'companion' | 'reality' | 'agents' | 'council';
 
 interface Message {
   id: string;
@@ -109,6 +110,8 @@ function App() {
         return <RealityTunneling onClose={() => setCurrentView('chat')} />;
       case 'agents':
         return <MultiAgentCanvas onClose={() => setCurrentView('chat')} />;
+      case 'council':
+        return <CouncilMode onClose={() => setCurrentView('chat')} />;
       default:
         return (
           <div className="flex flex-col h-full">
