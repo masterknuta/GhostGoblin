@@ -1,0 +1,15 @@
+export type ViewMode =
+  | 'chat'
+  | 'memory'
+  | 'hangman'
+  | 'roulette'
+  | 'riddle'
+  | 'duel'
+  | 'truth'
+  | 'thisorthat'
+  | 'astrology'
+  | 'security'
+  | 'confidence'
+  | 'companion'
+  | 'reality'
+  | 'agents';
