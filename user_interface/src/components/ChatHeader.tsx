@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
 import { Settings, Brain, Gamepad2, Star, Shield, Heart, Eye, Zap, Users } from 'lucide-react';
-import type { ViewMode } from '../App';  // Adjust path as needed
+
+// If ViewMode is not exported from App.tsx, define it here:
+export type ViewMode =
+  | 'memory'
+  | 'hangman'
+  | 'roulette'
+  | 'riddle'
+  | 'duel'
+  | 'truth'
+  | 'thisorthat'
+  | 'astrology'
+  | 'security'
+  | 'confidence'
+  | 'companion'
+  | 'reality'
+  | 'agents';
 
 interface ChatHeaderProps {
   onViewChange: (view: ViewMode) => void;
@@ -10,7 +25,7 @@ interface ChatHeaderProps {
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const menuItems = [
+  const menuItems: { id: ViewMode; icon: React.ComponentType<any>; label: string }[] = [
     { id: 'memory', icon: Brain, label: 'Memory Vault' },
     { id: 'hangman', icon: Gamepad2, label: 'Hangman' },
     { id: 'roulette', icon: Zap, label: 'Prompt Roulette' },
@@ -42,7 +57,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
           <p className="text-xs text-cyan">ASI Interface Active</p>
         </div>
       </div>
-      
+
       <div className="relative">
         <button
           onClick={() => setShowMenu(!showMenu)}
@@ -53,14 +68,14 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
         >
           <Settings className="w-5 h-5 text-neon-green" />
         </button>
-        
+
         {showMenu && (
           <div className="absolute right-0 top-12 bg-dark-gray border border-glowing-violet rounded-lg shadow-xl z-50 w-48 max-h-64 overflow-y-auto">
             {menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
-                  onViewChange(item.id as ViewMode);
+                  onViewChange(item.id);
                   setShowMenu(false);
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 text-left hover:bg-glowing-violet transition-colors ${
