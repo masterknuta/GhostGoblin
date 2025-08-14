@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
+import './index.css'; // ← this line is required
 
 // Find the root element in the HTML.
 const rootElement = document.getElementById('root');
