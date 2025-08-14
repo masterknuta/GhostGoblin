@@ -4,12 +4,13 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         'deep-purple': '#1a0b2e',
         'dark-gray': '#16213e',
-        'black': '#0f0f0f',
+        'custom-black': '#0f0f0f',
         'neon-green': '#39ff14',
         'glowing-violet': '#8a2be2',
         'cyan': '#00ffff',
@@ -17,6 +18,9 @@ export default {
       fontFamily: {
         'inter': ['Inter', 'sans-serif'],
         'orbitron': ['Orbitron', 'monospace'],
+      },
+      screens: {
+        'xs': '475px',
       },
       animation: {
         'shimmer': 'shimmer 2s ease-in-out infinite alternate',
