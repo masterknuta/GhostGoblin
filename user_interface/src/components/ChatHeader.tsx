@@ -1,17 +1,19 @@
 import React from 'react';
 import { Settings, Brain, Gamepad2, Star, Shield, Heart, Eye, Zap, Users, Crown } from 'lucide-react';
 
-type ViewMode = 'chat' | 'memory' | 'hangman' | 'roulette' | 'riddle' | 'duel' | 'truth' | 'thisorthat' | 'astrology' | 'security' | 'confidence' | 'companion' | 'reality' | 'agents' | 'council';
+type ViewMode =
+  | 'chat' | 'memory' | 'hangman' | 'roulette' | 'riddle' | 'duel' | 'truth' | 'thisorthat'
+  | 'astrology' | 'security' | 'confidence' | 'companion' | 'reality' | 'agents' | 'council';
 
 interface ChatHeaderProps {
   onViewChange: (view: ViewMode) => void;
-  currentView: string;
+  currentView: ViewMode; // <-- fix type here
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) => {
   const [showMenu, setShowMenu] = React.useState(false);
 
-  const menuItems = [
+  const menuItems: { id: ViewMode; icon: React.FC<any>; label: string }[] = [
     { id: 'memory', icon: Brain, label: 'Memory Vault' },
     { id: 'hangman', icon: Gamepad2, label: 'Hangman' },
     { id: 'roulette', icon: Zap, label: 'Prompt Roulette' },
@@ -44,7 +46,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
           <p className="text-sm text-cyan">ASI Interface Active</p>
         </div>
       </div>
-      
+
       <div className="relative">
         <button
           onClick={() => setShowMenu(!showMenu)}
@@ -52,14 +54,14 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
         >
           <Settings className="w-6 h-6 text-neon-green" />
         </button>
-        
+
         {showMenu && (
           <div className="absolute right-0 top-16 bg-dark-gray border border-glowing-violet rounded-lg shadow-xl z-50 w-56 max-h-80 overflow-y-auto">
             {menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
-                  onViewChange(item.id);
+                  onViewChange(item.id); // <-- now correctly typed as ViewMode
                   setShowMenu(false);
                 }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-glowing-violet transition-colors ${
