@@ -53,16 +53,13 @@ export default function App() {
       timestamp: new Date(),
     },
   ]);
-
   const [reasoningModal, setReasoningModal] = useState<{
     isOpen: boolean;
     title: string;
     content: string;
   }>({ isOpen: false, title: '', content: '' });
-
   const [isTyping, setIsTyping] = useState(false);
 
-  // --- HANDLE SEND MESSAGE ---
   const handleSendMessage = (text: string) => {
     const newMessage: Message = {
       id: Date.now().toString(),
@@ -72,7 +69,6 @@ export default function App() {
     };
     setMessages(prev => [...prev, newMessage]);
 
-    // AI response simulation
     setIsTyping(true);
     setTimeout(() => {
       const aiResponse: Message = {
@@ -86,7 +82,6 @@ export default function App() {
     }, 2000);
   };
 
-  // --- HANDLE REASONING CLICK ---
   const handleReasoningClick = (type: 'logic' | 'creative' | 'business') => {
     const content = {
       logic: "Analyzing logical pathways through quantum reasoning matrices...",
@@ -100,7 +95,6 @@ export default function App() {
     });
   };
 
-  // --- RENDER CURRENT VIEW ---
   const renderCurrentView = () => {
     switch (currentView) {
       case 'memory':
@@ -135,12 +129,12 @@ export default function App() {
         return (
           <div className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((msg) => (
+              {messages.map(message => (
                 <MessageBubble
-                  key={msg.id}
-                  message={msg.text}
-                  isUser={msg.isUser}
-                  timestamp={msg.timestamp}
+                  key={message.id}
+                  message={message.text}
+                  isUser={message.isUser}
+                  timestamp={message.timestamp}
                   onReasoningClick={handleReasoningClick}
                 />
               ))}
@@ -157,10 +151,24 @@ export default function App() {
     }
   };
 
+  // Wrapped setCurrentView to satisfy TypeScript
+  const handleViewChange = (view: string) => {
+    const validViews: ViewMode[] = [
+      'chat', 'memory', 'hangman', 'roulette', 'riddle', 'duel',
+      'truth', 'thisorthat', 'astrology', 'security', 'confidence',
+      'companion', 'reality', 'agents', 'council'
+    ];
+    if (validViews.includes(view as ViewMode)) {
+      setCurrentView(view as ViewMode);
+    } else {
+      console.error(`Invalid view mode: ${view}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-custom-black nebula-bg">
       <div className="w-full h-screen bg-deep-purple border-glowing-violet flex flex-col overflow-hidden">
-        <ChatHeader onViewChange={setCurrentView} currentView={currentView} />
+        <ChatHeader onViewChange={handleViewChange} currentView={currentView} />
         {renderCurrentView()}
       </div>
 
@@ -168,9 +176,7 @@ export default function App() {
         <ReasoningModal
           title={reasoningModal.title}
           content={reasoningModal.content}
-          onClose={() =>
-            setReasoningModal({ isOpen: false, title: '', content: '' })
-          }
+          onClose={() => setReasoningModal({ isOpen: false, title: '', content: '' })}
         />
       )}
     </div>
