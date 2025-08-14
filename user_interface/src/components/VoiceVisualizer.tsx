@@ -1,37 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 interface VoiceVisualizerProps {
   isActive: boolean;
 }
 
 const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({ isActive }) => {
-  const barsCount = 8;
-  const [heights, setHeights] = useState<number[]>(Array(barsCount).fill(4));
-
-  useEffect(() => {
-    if (!isActive) {
-      setHeights(Array(barsCount).fill(4));
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setHeights(
-        Array(barsCount)
-          .fill(0)
-          .map(() => Math.random() * 24 + 8)
-      );
-    }, 300); // update every 300ms
-
-    return () => clearInterval(interval);
-  }, [isActive]);
+  const bars = Array.from({ length: 8 }, (_, i) => i);
 
   return (
     <div className="flex items-center space-x-1 h-8">
-      {heights.map((height, i) => (
+      {bars.map((bar) => (
         <div
-          key={i}
-          className="w-1 bg-neon-green rounded-full transition-all duration-300"
-          style={{ height }}
+          key={bar}
+          className={`w-1 bg-neon-green rounded-full transition-all duration-300 ${
+            isActive 
+              ? `animate-pulse h-${Math.floor(Math.random() * 6) + 2}` 
+              : 'h-1'
+          }`}
+          style={{
+            animationDelay: `${bar * 0.1}s`,
+            height: isActive ? `${Math.random() * 24 + 8}px` : '4px'
+          }}
         />
       ))}
     </div>

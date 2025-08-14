@@ -26,69 +26,63 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
-      <div
-        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-          isUser 
-            ? 'bg-glowing-violet text-white' 
-            : 'bg-dark-gray text-slate-100'
-        }`}
-      >
-        <p className="text-sm">{message}</p>
-
+      <div className={`max-w-2xl px-6 py-4 rounded-lg ${
+        isUser 
+          ? 'bg-glowing-violet text-white' 
+          : 'bg-dark-gray text-slate-100'
+      }`}>
+        <p className="text-base leading-relaxed">{message}</p>
         <div className="flex items-center justify-between mt-2">
-          <span className="text-xs opacity-70">
-            {timestamp instanceof Date
-              ? timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              : ''}
+          <span className="text-sm opacity-70">
+            {timestamp.toLocaleTimeString()}
           </span>
           <div className="flex space-x-1">
             <button
               onClick={handleCopy}
-              className="p-1 hover:bg-neon-green hover:bg-opacity-20 rounded transition-colors"
+              className="p-2 hover:bg-neon-green hover:bg-opacity-20 rounded transition-colors"
             >
-              <Copy className="w-3 h-3" />
+              <Copy className="w-4 h-4" />
             </button>
             {!isUser && (
-              <button className="p-1 hover:bg-neon-green hover:bg-opacity-20 rounded transition-colors">
-                <RefreshCw className="w-3 h-3" />
+              <button className="p-2 hover:bg-neon-green hover:bg-opacity-20 rounded transition-colors">
+                <RefreshCw className="w-4 h-4" />
               </button>
             )}
           </div>
         </div>
-
+        
         {!isUser && (
           <>
             {/* Reasoning Buttons */}
             <div className="flex space-x-2 mt-3">
               <button
                 onClick={() => onReasoningClick('logic')}
-                className="px-2 py-1 bg-cyan bg-opacity-20 text-cyan text-xs rounded hover:bg-opacity-30 transition-colors"
+                className="px-3 py-2 bg-cyan bg-opacity-20 text-cyan text-sm rounded hover:bg-opacity-30 transition-colors"
               >
                 Logic
               </button>
               <button
                 onClick={() => onReasoningClick('creative')}
-                className="px-2 py-1 bg-glowing-violet bg-opacity-20 text-glowing-violet text-xs rounded hover:bg-opacity-30 transition-colors"
+                className="px-3 py-2 bg-glowing-violet bg-opacity-20 text-glowing-violet text-sm rounded hover:bg-opacity-30 transition-colors"
               >
                 Creative
               </button>
               <button
                 onClick={() => onReasoningClick('business')}
-                className="px-2 py-1 bg-neon-green bg-opacity-20 text-neon-green text-xs rounded hover:bg-opacity-30 transition-colors"
+                className="px-3 py-2 bg-neon-green bg-opacity-20 text-neon-green text-sm rounded hover:bg-opacity-30 transition-colors"
               >
                 Business
               </button>
             </div>
-
+            
             {/* Contextual Buttons */}
             <div className="flex flex-wrap gap-1 mt-2">
               {contextualButtons.map((button, index) => (
                 <button
                   key={index}
-                  className="px-2 py-1 bg-deep-purple bg-opacity-20 text-deep-purple text-xs rounded hover:bg-opacity-30 transition-colors flex items-center gap-1"
+                  className="px-3 py-2 bg-deep-purple border border-neon-green text-neon-green text-sm rounded hover:bg-neon-green hover:text-black transition-colors"
                 >
-                  <span>{button.emoji}</span>
-                  <span>{button.label}</span>
+                  {button.emoji} {button.label}
                 </button>
               ))}
             </div>

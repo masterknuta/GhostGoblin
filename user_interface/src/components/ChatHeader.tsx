@@ -1,8 +1,10 @@
 import React from 'react';
 import { Settings, Brain, Gamepad2, Star, Shield, Heart, Eye, Zap, Users, Crown } from 'lucide-react';
 
+type ViewMode = 'chat' | 'memory' | 'hangman' | 'roulette' | 'riddle' | 'duel' | 'truth' | 'thisorthat' | 'astrology' | 'security' | 'confidence' | 'companion' | 'reality' | 'agents' | 'council';
+
 interface ChatHeaderProps {
-  onViewChange: (view: string) => void;
+  onViewChange: (view: ViewMode) => void;
   currentView: string;
 }
 
@@ -27,32 +29,32 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
   ];
 
   return (
-    <div className="bg-deep-purple border-b border-glowing-violet p-4 flex items-center justify-between">
+    <div className="bg-deep-purple border-b border-glowing-violet p-6 flex items-center justify-between">
       <div className="flex items-center space-x-3">
         <div className="relative">
           <img
-            src="https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop"
+            src="https://github.com/masterknuta/GhostGoblin/blob/main/user_interface/src/components/images/GG.jpg"
             alt="GG Avatar"
-            className="w-10 h-10 rounded-full border-2 border-neon-green animate-shimmer"
+            className="w-12 h-12 rounded-full border-2 border-neon-green animate-shimmer"
           />
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-neon-green rounded-full animate-pulse-glow"></div>
         </div>
         <div>
-          <h3 className="font-orbitron font-bold text-white">GhostGoblin</h3>
-          <p className="text-xs text-cyan">ASI Interface Active</p>
+          <h3 className="font-orbitron font-bold text-white text-xl">GhostGoblin</h3>
+          <p className="text-sm text-cyan">ASI Interface Active</p>
         </div>
       </div>
       
       <div className="relative">
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="p-2 hover:bg-glowing-violet rounded-lg transition-colors"
+          className="p-3 hover:bg-glowing-violet rounded-lg transition-colors"
         >
-          <Settings className="w-5 h-5 text-neon-green" />
+          <Settings className="w-6 h-6 text-neon-green" />
         </button>
         
         {showMenu && (
-          <div className="absolute right-0 top-12 bg-dark-gray border border-glowing-violet rounded-lg shadow-xl z-50 w-48 max-h-64 overflow-y-auto">
+          <div className="absolute right-0 top-16 bg-dark-gray border border-glowing-violet rounded-lg shadow-xl z-50 w-56 max-h-80 overflow-y-auto">
             {menuItems.map((item) => (
               <button
                 key={item.id}
@@ -60,12 +62,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
                   onViewChange(item.id);
                   setShowMenu(false);
                 }}
-                className={`w-full flex items-center space-x-2 px-3 py-2 text-left hover:bg-glowing-violet transition-colors ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-glowing-violet transition-colors ${
                   currentView === item.id ? 'bg-glowing-violet' : ''
                 }`}
               >
-                <item.icon className="w-4 h-4 text-neon-green" />
-                <span className="text-white text-sm">{item.label}</span>
+                <item.icon className="w-5 h-5 text-neon-green" />
+                <span className="text-white">{item.label}</span>
               </button>
             ))}
           </div>
