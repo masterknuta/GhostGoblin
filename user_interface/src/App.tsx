@@ -18,7 +18,6 @@ import CompanionMode from './components/companion/CompanionMode';
 import RealityTunneling from './components/reality/RealityTunneling';
 import MultiAgentCanvas from './components/MultiAgentCanvas';
 import CouncilMode from './components/CouncilMode';
-import ChatHistorySidebar from './components/ChatHistorySidebar';
 
 type ViewMode =
   | 'chat'
@@ -98,37 +97,23 @@ export default function App() {
 
   const renderCurrentView = () => {
     switch (currentView) {
-      case 'memory':
-        return <MemoryVault onClose={() => setCurrentView('chat')} />;
-      case 'hangman':
-        return <Hangman onClose={() => setCurrentView('chat')} />;
-      case 'roulette':
-        return <PromptRoulette onClose={() => setCurrentView('chat')} />;
-      case 'riddle':
-        return <RiddleMode onClose={() => setCurrentView('chat')} />;
-      case 'duel':
-        return <LoreDuel onClose={() => setCurrentView('chat')} />;
-      case 'truth':
-        return <TruthDare onClose={() => setCurrentView('chat')} />;
-      case 'thisorthat':
-        return <ThisOrThat onClose={() => setCurrentView('chat')} />;
-      case 'astrology':
-        return <AstrologyMain onClose={() => setCurrentView('chat')} />;
-      case 'security':
-        return <SecuritySuiteMain onClose={() => setCurrentView('chat')} />;
-      case 'confidence':
-        return <ConfidenceRater onClose={() => setCurrentView('chat')} />;
-      case 'companion':
-        return <CompanionMode onClose={() => setCurrentView('chat')} />;
-      case 'reality':
-        return <RealityTunneling onClose={() => setCurrentView('chat')} />;
-      case 'agents':
-        return <MultiAgentCanvas onClose={() => setCurrentView('chat')} />;
-      case 'council':
-        return <CouncilMode onClose={() => setCurrentView('chat')} />;
+      case 'memory': return <MemoryVault onClose={() => setCurrentView('chat')} />;
+      case 'hangman': return <Hangman onClose={() => setCurrentView('chat')} />;
+      case 'roulette': return <PromptRoulette onClose={() => setCurrentView('chat')} />;
+      case 'riddle': return <RiddleMode onClose={() => setCurrentView('chat')} />;
+      case 'duel': return <LoreDuel onClose={() => setCurrentView('chat')} />;
+      case 'truth': return <TruthDare onClose={() => setCurrentView('chat')} />;
+      case 'thisorthat': return <ThisOrThat onClose={() => setCurrentView('chat')} />;
+      case 'astrology': return <AstrologyMain onClose={() => setCurrentView('chat')} />;
+      case 'security': return <SecuritySuiteMain onClose={() => setCurrentView('chat')} />;
+      case 'confidence': return <ConfidenceRater onClose={() => setCurrentView('chat')} />;
+      case 'companion': return <CompanionMode onClose={() => setCurrentView('chat')} />;
+      case 'reality': return <RealityTunneling onClose={() => setCurrentView('chat')} />;
+      case 'agents': return <MultiAgentCanvas onClose={() => setCurrentView('chat')} />;
+      case 'council': return <CouncilMode onClose={() => setCurrentView('chat')} />;
       default:
         return (
-          <div className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map(message => (
                 <MessageBubble
@@ -158,24 +143,20 @@ export default function App() {
       'truth', 'thisorthat', 'astrology', 'security', 'confidence',
       'companion', 'reality', 'agents', 'council'
     ];
-    if (validViews.includes(view as ViewMode)) {
-      setCurrentView(view as ViewMode);
-    } else {
-      console.error(`Invalid view mode: ${view}`);
-    }
+    if (validViews.includes(view as ViewMode)) setCurrentView(view as ViewMode);
+    else console.error(`Invalid view mode: ${view}`);
   };
 
   return (
     <div className="flex min-h-screen bg-custom-black">
       {/* Sidebar */}
-      <ChatHistorySidebar />
+      <div className="w-80 bg-deep-purple border-r border-glowing-violet flex flex-col">
+        {/* You can integrate your Gemini sidebar here */}
+        <ChatHeader onViewChange={handleViewChange} currentView={currentView} />
+      </div>
 
-      {/* Main Column */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <ChatHeader currentView={currentView} onViewChange={handleViewChange} />
-
-        {/* Chat / Views */}
         {renderCurrentView()}
       </div>
 
