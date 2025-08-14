@@ -1,14 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+// Vite configuration for Netlify deployment
 export default defineConfig({
-  root: '..', // Sets the project root to the parent directory (repository root)
   plugins: [react()],
+  root: '.', // Current folder (user_interface) is the root
   build: {
-    outDir: 'user_interface/dist', // Output to 'user_interface/dist' relative to the new root
+    outDir: 'dist',        // Output will go to user_interface/dist
+    emptyOutDir: true,     // Clear previous builds
     rollupOptions: {
-      input: 'index.html', // Explicitly tell Rollup to use index.html from the root
+      input: 'index.html', // Entry point relative to root
     },
+  },
+  server: {
+    open: true,            // Opens browser on local dev server
   },
 })
