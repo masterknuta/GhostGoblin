@@ -35,10 +35,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onViewChange, currentView }) =>
       <div className="flex items-center space-x-3">
         <div className="relative">
           <img
-            src="https://github.com/masterknuta/GhostGoblin/blob/main/user_interface/src/components/images/GG.jpg"
-            alt="GG Avatar"
-            className="w-12 h-12 rounded-full border-2 border-neon-green animate-shimmer"
-          />
+  src="https://raw.githubusercontent.com/masterknuta/GhostGoblin/main/user_interface/src/components/images/GG.jpg"
+  alt="GG Avatar"
+  className="w-12 h-12 rounded-full border-2 border-neon-green animate-shimmer"
+/>
+
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-neon-green rounded-full animate-pulse-glow"></div>
         </div>
         <div>
