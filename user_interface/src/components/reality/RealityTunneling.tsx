@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-// The build log indicates that your environment is missing the d3 type declarations.
-// To fix this, you need to install the package: npm install @types/d3
 import * as d3 from 'd3';
+
+// Define the props for the component, including the onClose prop
+interface RealityTunnelingProps {
+  onClose: () => void;
+}
 
 // Define the data structures for type safety
 interface Option {
@@ -17,7 +20,7 @@ interface NodeData {
   options: Option[];
 }
 
-const RealityTunneling: React.FC = () => {
+const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
   // State management for the application
   const [allNodes, setAllNodes] = useState<Record<string, NodeData>>({});
   const [history, setHistory] = useState<string[]>([]);
@@ -32,7 +35,7 @@ const RealityTunneling: React.FC = () => {
   const d3gRef = useRef<d3.Selection<SVGGElement, unknown, null, undefined> | null>(null);
   const d3TreeRef = useRef<d3.TreeLayout<NodeData> | null>(null);
   
-  // D3.js initialization
+  // D3.js initialization: set up the SVG and tree layout on component mount
   useEffect(() => {
     if (flowchartSvgRef.current) {
       d3SvgRef.current = d3.select(flowchartSvgRef.current);
@@ -41,10 +44,11 @@ const RealityTunneling: React.FC = () => {
     }
   }, []);
 
-  // Function to handle API call and response
+  // Function to handle API call and response, generating a new scenario
   const generateNewScenario = async (userPrompt: string, isFirstNode = false) => {
     setIsLoading(true);
 
+    // Payload for the Gemini API call, requesting a structured JSON response
     const payload = {
         contents: [{
             role: "user",
@@ -95,6 +99,7 @@ const RealityTunneling: React.FC = () => {
             throw new Error('API response was empty or malformed.');
         }
 
+        // Parse the JSON response and create a new node
         const data: Omit<NodeData, 'id' | 'options'> & { options: { text: string }[] } = JSON.parse(jsonText);
         const newNodeId = `node-${Date.now()}`;
         const newNode: NodeData = {
@@ -108,6 +113,7 @@ const RealityTunneling: React.FC = () => {
           })),
         };
 
+        // Update the state with the new node
         setAllNodes(prevNodes => ({ ...prevNodes, [newNodeId]: newNode }));
 
         if (isFirstNode) {
@@ -123,23 +129,23 @@ const RealityTunneling: React.FC = () => {
 
     } catch (error) {
         console.error('Error generating new scenario:', error);
-        // Using a custom alert/modal instead of window.alert()
-        // For this example, we'll just log an error message
+        // Log a user-friendly error message
         console.error('Failed to generate scenario. Please try again.');
     } finally {
         setIsLoading(false);
     }
   };
 
-  // D3.js rendering logic
+  // D3.js rendering logic: updates the flowchart whenever nodes or history change
   useEffect(() => {
     if (!d3gRef.current || !d3TreeRef.current || Object.keys(allNodes).length === 0) {
       return;
     }
     
+    // Clear previous SVG content
     d3gRef.current.selectAll("*").remove();
     
-    // Transform linear history into a hierarchical data structure
+    // Find the root node to build the tree hierarchy
     let rootNode: NodeData | null = null;
     let nodesArray = Object.values(allNodes);
     
@@ -160,7 +166,7 @@ const RealityTunneling: React.FC = () => {
         return;
     }
     
-    // Add type annotation to the d parameter
+    // Create the D3 hierarchy from the root node
     const data = d3.hierarchy(rootNode, (d: NodeData) => {
         const childNodes: NodeData[] = [];
         Object.values(allNodes).forEach(node => {
@@ -176,25 +182,24 @@ const RealityTunneling: React.FC = () => {
     const nodes = treeLayout.descendants();
 
     const svgWidth = flowchartSvgRef.current?.clientWidth || 320;
-    const svgHeight = flowchartSvgRef.current?.clientHeight || 600;
 
-    const links = d3gRef.current.selectAll(".link")
+    // Draw the links (paths) between nodes
+    d3gRef.current.selectAll(".link")
         .data(data.links())
         .join("path")
         .attr("class", "link")
         .attr("fill", "none")
         .attr("stroke", "var(--glowing-violet)")
         .attr("stroke-width", 2)
-        // Add type annotation to the d parameter
         .attr("d", d3.linkVertical<d3.HierarchyPointLink<NodeData>>()
             .x((d: d3.HierarchyPointNode<NodeData>) => d.x)
             .y((d: d3.HierarchyPointNode<NodeData>) => d.y));
 
+    // Draw the nodes (circles and text)
     const node = d3gRef.current.selectAll(".node")
         .data(nodes)
         .join("g")
         .attr("class", "node")
-        // Add type annotation to the d parameter
         .attr("transform", (d: d3.HierarchyPointNode<NodeData>) => `translate(${d.x},${d.y})`);
 
     node.append("circle")
@@ -202,7 +207,6 @@ const RealityTunneling: React.FC = () => {
         .attr("fill", "var(--neon-green)")
         .attr("stroke", "var(--glowing-violet)")
         .attr("stroke-width", 2)
-        // Add type annotation to the event and d parameters
         .on("click", (event: MouseEvent, d: d3.HierarchyPointNode<NodeData>) => handleGoToNode(d.data.id));
 
     node.append("text")
@@ -210,29 +214,24 @@ const RealityTunneling: React.FC = () => {
         .attr("text-anchor", "middle")
         .attr("font-size", "10px")
         .attr("fill", "white")
-        // Add type annotation to the d parameter
         .text((d: d3.HierarchyPointNode<NodeData>) => d.data.title);
 
     node.append("text")
         .attr("dy", "0.5em")
         .attr("text-anchor", "middle")
         .attr("font-size", "16px")
-        // Add type annotation to the d parameter
         .attr("fill", (d: d3.HierarchyPointNode<NodeData>) => history.includes(d.data.id) ? "var(--neon-green)" : "transparent")
-        // Add type annotation to the d parameter
         .html((d: d3.HierarchyPointNode<NodeData>) => history.includes(d.data.id) ? '<i class="fas fa-check-circle"></i>' : '');
 
     // Center the tree
-    // Add type annotation to the d parameter
     const minX = d3.min(nodes, (d: d3.HierarchyPointNode<NodeData>) => d.x) || 0;
-    // Add type annotation to the d parameter
     const maxX = d3.max(nodes, (d: d3.HierarchyPointNode<NodeData>) => d.x) || 0;
     const treeWidth = maxX - minX;
     d3gRef.current.attr("transform", `translate(${svgWidth / 2 - minX - treeWidth / 2}, 20)`);
   
   }, [allNodes, history]);
 
-  // Event handlers
+  // Event handlers for UI interaction
   const handleGoBack = () => {
     if (history.length > 1) {
       setHistory(prev => prev.slice(0, -1));
@@ -261,6 +260,7 @@ const RealityTunneling: React.FC = () => {
 
   return (
     <div className="h-screen flex flex-col font-inter bg-custom-black text-white">
+      {/* Styles for the app, including Tailwind and custom CSS variables */}
       <style>
         {`
           :root {
@@ -324,17 +324,17 @@ const RealityTunneling: React.FC = () => {
       </style>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-      {/* Header */}
+      {/* Header with title and close button */}
       <div className="p-4 border-b border-glowing-violet flex items-center justify-between">
           <h2 className="text-lg font-bold text-neon-green font-varela">Reality Tunneling & Flowchart View</h2>
-          <button className="p-1 hover:bg-glowing-violet rounded-full">
+          <button className="p-1 hover:bg-glowing-violet rounded-full" onClick={onClose}>
               <i className="fas fa-xmark text-white"></i>
           </button>
       </div>
 
       {/* Main Content and Sidebar Container */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Pane: Chat-style content */}
+        {/* Left Pane: Chat-style content and prompt input */}
         <div className="flex-1 relative overflow-y-auto p-6 space-y-4">
           {/* Persistent Prompt Input Area */}
           <div className="p-4 rounded-lg bg-dark-gray sticky top-0 z-10 shadow-lg">
@@ -367,7 +367,7 @@ const RealityTunneling: React.FC = () => {
             )}
           </div>
 
-          {/* Dynamic Chat History */}
+          {/* Dynamic Chat History: displays the generated scenarios */}
           <div className="space-y-4">
             {history.map((nodeId, index) => {
               const node = allNodes[nodeId];
@@ -405,7 +405,7 @@ const RealityTunneling: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Pane: Flowchart Sidebar */}
+        {/* Right Pane: D3.js Flowchart Sidebar */}
         <div className={`w-80 bg-deep-purple p-4 border-l border-glowing-violet overflow-y-auto transition-all duration-300 transform lg:translate-x-0 absolute inset-y-0 right-0 lg:static z-20 ${isFlowchartSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-lg text-neon-green font-bold font-varela">Flowchart</h4>
