@@ -1,257 +1,442 @@
-import React, { useState } from 'react';
-import { X, GitBranch, Eye, Play } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as d3 from 'd3';
 
-interface RealityTunnelingProps {
-  onClose: () => void;
+// Define the data structures for type safety
+interface Option {
+  id: string;
+  text: string;
+  parent: string | null;
 }
 
-interface RealityNode {
+interface NodeData {
   id: string;
   title: string;
   description: string;
-  x: number;
-  y: number;
-  children: string[];
-  isActive: boolean;
+  options: Option[];
 }
 
-const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
-  const [selectedNode, setSelectedNode] = useState<RealityNode | null>(null);
-  const [consciousnessFlow, setConsciousnessFlow] = useState(false);
+const RealityTunneling: React.FC = () => {
+  // State management for the application
+  const [allNodes, setAllNodes] = useState<Record<string, NodeData>>({});
+  const [history, setHistory] = useState<string[]>([]);
+  const [visitedPaths, setVisitedPaths] = useState<Set<string>>(new Set());
+  const [isFlowchartSidebarOpen, setIsFlowchartSidebarOpen] = useState(false);
+  const [prompt, setPrompt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const nodes: RealityNode[] = [
-    {
-      id: 'root',
-      title: 'Core Reality',
-      description: 'The initial state of consciousness where all possibilities converge.',
-      x: 50,
-      y: 20,
-      children: ['branch1', 'branch2', 'branch3'],
-      isActive: true
-    },
-    {
-      id: 'branch1',
-      title: 'The Hero\'s Redemption Arc',
-      description: 'A reality where the protagonist overcomes their greatest flaw through sacrifice and wisdom.',
-      x: 20,
-      y: 50,
-      children: ['leaf1', 'leaf2'],
-      isActive: false
-    },
-    {
-      id: 'branch2',
-      title: 'Digital Transcendence',
-      description: 'Consciousness uploads to a quantum substrate, achieving immortality through silicon dreams.',
-      x: 50,
-      y: 60,
-      children: ['leaf3'],
-      isActive: false
-    },
-    {
-      id: 'branch3',
-      title: 'The Paradox Resolution',
-      description: 'All contradictions collapse into a singular truth that encompasses infinite possibilities.',
-      x: 80,
-      y: 45,
-      children: ['leaf4', 'leaf5'],
-      isActive: false
-    },
-    {
-      id: 'leaf1',
-      title: 'Sacrifice Ending',
-      description: 'The hero gives up their power to save others, finding peace in mortality.',
-      x: 10,
-      y: 80,
-      children: [],
-      isActive: false
-    },
-    {
-      id: 'leaf2',
-      title: 'Wisdom Ending',
-      description: 'The hero becomes a mentor, guiding the next generation through their trials.',
-      x: 30,
-      y: 85,
-      children: [],
-      isActive: false
-    },
-    {
-      id: 'leaf3',
-      title: 'Collective Mind',
-      description: 'Individual consciousness merges with the digital collective, becoming part of something greater.',
-      x: 50,
-      y: 90,
-      children: [],
-      isActive: false
-    },
-    {
-      id: 'leaf4',
-      title: 'Quantum Superposition',
-      description: 'Reality exists in all states simultaneously until observed and collapsed.',
-      x: 70,
-      y: 75,
-      children: [],
-      isActive: false
-    },
-    {
-      id: 'leaf5',
-      title: 'Infinite Recursion',
-      description: 'The story loops back on itself, creating an eternal cycle of meaning.',
-      x: 90,
-      y: 80,
-      children: [],
-      isActive: false
+  // Refs for D3.js elements to persist across renders
+  const flowchartSvgRef = useRef<SVGSVGElement>(null);
+  const d3SvgRef = useRef<d3.Selection<SVGSVGElement | null, unknown, null, undefined> | null>(null);
+  const d3gRef = useRef<d3.Selection<SVGGElement, unknown, null, undefined> | null>(null);
+  const d3TreeRef = useRef<d3.TreeLayout<d3.HierarchyNode<NodeData>> | null>(null);
+  
+  // D3.js initialization
+  useEffect(() => {
+    if (flowchartSvgRef.current) {
+      d3SvgRef.current = d3.select(flowchartSvgRef.current);
+      d3gRef.current = d3SvgRef.current.append("g");
+      d3TreeRef.current = d3.tree<NodeData>().nodeSize([100, 180]);
     }
-  ];
+  }, []);
 
-  const handleNodeClick = (node: RealityNode) => {
-    setSelectedNode(node);
+  // Function to handle API call and response
+  const generateNewScenario = async (userPrompt: string, isFirstNode = false) => {
+    setIsLoading(true);
+
+    const payload = {
+        contents: [{
+            role: "user",
+            parts: [{
+                text: `You are a "Reality Tunneling AI". Given a user's question, create a plausible scenario and three distinct, branching options. Format the output as a JSON object with the following structure: { "title": "...", "description": "...", "options": [ { "text": "..." }, { "text": "..." }, { "text": "..." } ] }. The title should be a catchy name for the reality, the description a detailed explanation of the current situation, and each option should be a brief, single-sentence choice. The user's question is: "${userPrompt}"`
+            }]
+        }],
+        generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: "OBJECT",
+                properties: {
+                    "title": { "type": "STRING" },
+                    "description": { "type": "STRING" },
+                    "options": {
+                        "type": "ARRAY",
+                        "items": {
+                            "type": "OBJECT",
+                            "properties": {
+                                "text": { "type": "STRING" }
+                            }
+                        }
+                    }
+                },
+                "propertyOrdering": ["title", "description", "options"]
+            }
+        }
+    };
+
+    const apiKey = "";
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API call failed with status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!jsonText) {
+            throw new Error('API response was empty or malformed.');
+        }
+
+        const data: Omit<NodeData, 'id' | 'options'> & { options: { text: string }[] } = JSON.parse(jsonText);
+        const newNodeId = `node-${Date.now()}`;
+        const newNode: NodeData = {
+          id: newNodeId,
+          title: data.title,
+          description: data.description,
+          options: data.options.map((opt, index) => ({
+              id: `${newNodeId}-option-${index}`,
+              text: opt.text,
+              parent: isFirstNode ? null : history[history.length - 1],
+          })),
+        };
+
+        setAllNodes(prevNodes => ({ ...prevNodes, [newNodeId]: newNode }));
+
+        if (isFirstNode) {
+            setHistory([newNodeId]);
+            setVisitedPaths(new Set());
+        } else {
+            const previousNodeId = history[history.length - 1];
+            if (previousNodeId && allNodes[previousNodeId].options.length > 1) {
+              setVisitedPaths(prev => new Set(prev).add(previousNodeId));
+            }
+            setHistory(prev => [...prev, newNodeId]);
+        }
+
+    } catch (error) {
+        console.error('Error generating new scenario:', error);
+        // Using a custom alert/modal instead of window.alert()
+        // For this example, we'll just log an error message
+        console.error('Failed to generate scenario. Please try again.');
+    } finally {
+        setIsLoading(false);
+    }
   };
 
-  const handleSelectPath = (nodeId: string) => {
-    // Simulate selecting a reality path
-    setSelectedNode(null);
-    setConsciousnessFlow(true);
-    setTimeout(() => setConsciousnessFlow(false), 3000);
+  // D3.js rendering logic
+  useEffect(() => {
+    if (!d3gRef.current || !d3TreeRef.current || Object.keys(allNodes).length === 0) {
+      return;
+    }
+    
+    d3gRef.current.selectAll("*").remove();
+    
+    // Transform linear history into a hierarchical data structure
+    let rootNode: NodeData | null = null;
+    let nodesArray = Object.values(allNodes);
+    
+    if (nodesArray.length > 0) {
+        let currentNode = nodesArray[nodesArray.length - 1];
+        while (currentNode) {
+            const parentId = currentNode.options[0]?.parent;
+            if (!parentId) {
+                rootNode = currentNode;
+                break;
+            }
+            currentNode = allNodes[parentId];
+        }
+    }
+
+    if (!rootNode) {
+        console.error("Could not find root node for flowchart.");
+        return;
+    }
+
+    const data = d3.hierarchy(rootNode, d => {
+        const childNodes: NodeData[] = [];
+        Object.values(allNodes).forEach(node => {
+          const hasParent = node.options.some(opt => opt.parent === d.id);
+          if (hasParent) {
+            childNodes.push(node);
+          }
+        });
+        return childNodes;
+    });
+    
+    const treeLayout = d3TreeRef.current(data);
+    const nodes = treeLayout.descendants();
+
+    const svgWidth = flowchartSvgRef.current?.clientWidth || 320;
+    const svgHeight = flowchartSvgRef.current?.clientHeight || 600;
+
+    const links = d3gRef.current.selectAll(".link")
+        .data(data.links())
+        .join("path")
+        .attr("class", "link")
+        .attr("fill", "none")
+        .attr("stroke", "var(--glowing-violet)")
+        .attr("stroke-width", 2)
+        .attr("d", d3.linkVertical()
+            .x(d => d.x)
+            .y(d => d.y));
+
+    const node = d3gRef.current.selectAll(".node")
+        .data(nodes)
+        .join("g")
+        .attr("class", "node")
+        .attr("transform", d => `translate(${d.x},${d.y})`);
+
+    node.append("circle")
+        .attr("r", 10)
+        .attr("fill", "var(--neon-green)")
+        .attr("stroke", "var(--glowing-violet)")
+        .attr("stroke-width", 2)
+        .on("click", (event, d) => handleGoToNode(d.data.id));
+
+    node.append("text")
+        .attr("dy", "-1.5em")
+        .attr("text-anchor", "middle")
+        .attr("font-size", "10px")
+        .attr("fill", "white")
+        .text(d => d.data.title);
+
+    node.append("text")
+        .attr("dy", "0.5em")
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16px")
+        .attr("fill", d => history.includes(d.data.id) ? "var(--neon-green)" : "transparent")
+        .html(d => history.includes(d.data.id) ? '<i class="fas fa-check-circle"></i>' : '');
+
+    // Center the tree
+    const minX = d3.min(nodes, d => d.x) || 0;
+    const maxX = d3.max(nodes, d => d.x) || 0;
+    const treeWidth = maxX - minX;
+    d3gRef.current.attr("transform", `translate(${svgWidth / 2 - minX - treeWidth / 2}, 20)`);
+  
+  }, [allNodes, history]);
+
+  // Event handlers
+  const handleGoBack = () => {
+    if (history.length > 1) {
+      setHistory(prev => prev.slice(0, -1));
+    }
   };
 
-  const startConsciousnessFlow = () => {
-    setConsciousnessFlow(true);
-    setTimeout(() => setConsciousnessFlow(false), 3000);
+  const handleGoToNode = (nodeId: string) => {
+    const nodeIndex = history.indexOf(nodeId);
+    if (nodeIndex !== -1) {
+      setHistory(history.slice(0, nodeIndex + 1));
+      setIsFlowchartSidebarOpen(false);
+    }
   };
+
+  const toggleSidebar = () => {
+    setIsFlowchartSidebarOpen(!isFlowchartSidebarOpen);
+  };
+  
+  const handleSimulate = () => {
+    if (prompt.trim()) {
+      generateNewScenario(prompt.trim(), true);
+    }
+  };
+
+  const currentNode = allNodes[history[history.length - 1]];
 
   return (
-    <div className="h-full bg-deep-purple flex flex-col">
+    <div className="h-screen flex flex-col font-inter bg-custom-black text-white">
+      <style>
+        {`
+          :root {
+              --neon-green: #39ff14;
+              --glowing-violet: #8a2be2;
+              --darker-violet: #4A148C;
+              --dark-teal: #008080;
+              --deep-purple: #1e112a;
+              --dark-gray: #1a1a1a;
+              --custom-black: #0d0d0d;
+          }
+
+          body {
+              font-family: 'Inter', sans-serif;
+              background-color: var(--custom-black);
+              color: white;
+          }
+
+          .font-varela {
+              font-family: 'Varela Round', sans-serif;
+          }
+
+          .text-neon-green { color: var(--neon-green); }
+          .bg-neon-green { background-color: var(--neon-green); }
+          .border-neon-green { border-color: var(--neon-green); }
+          .text-glowing-violet { color: var(--glowing-violet); }
+          .bg-glowing-violet { background-color: var(--glowing-violet); }
+          .border-glowing-violet { border-color: var(--glowing-violet); }
+          .text-darker-violet { color: var(--darker-violet); }
+          .bg-darker-violet { background-color: var(--darker-violet); }
+          .border-darker-violet { border-color: var(--darker-violet); }
+          .text-dark-teal { color: var(--dark-teal); }
+          .bg-dark-teal { background-color: var(--dark-teal); }
+          .border-dark-teal { border-color: var(--dark-teal); }
+          .bg-deep-purple { background-color: var(--deep-purple); }
+          .bg-dark-gray { background-color: var(--dark-gray); }
+          .bg-custom-black { background-color: var(--custom-black); }
+          .text-custom-black { color: var(--custom-black); }
+
+          .animate-pulse {
+              animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+          @keyframes pulse {
+              0%, 100% {
+                  opacity: 1;
+              }
+              50% {
+                  opacity: .5;
+              }
+          }
+          
+          .icon { font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+          .fa-git-branch::before { content: '\\f126'; }
+          .fa-xmark::before { content: '\\f00d'; }
+          .fa-arrow-left-long::before { content: '\\f177'; }
+          .fa-play::before { content: '\\f04b'; }
+          .fa-check-circle::before { content: '\\f058'; }
+          .fa-chevron-down::before { content: '\\f078'; }
+          .fa-chevron-right::before { content: '\\f054'; }
+        `}
+      </style>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+      {/* Header */}
       <div className="p-4 border-b border-glowing-violet flex items-center justify-between">
-        <h2 className="font-orbitron text-lg font-bold text-neon-green">Reality Tunneling & Fork Management</h2>
-        <button onClick={onClose} className="p-1 hover:bg-glowing-violet rounded">
-          <X className="w-5 h-5 text-white" />
+          <h2 className="text-lg font-bold text-neon-green font-varela">Reality Tunneling & Flowchart View</h2>
+          <button className="p-1 hover:bg-glowing-violet rounded-full">
+              <i className="fas fa-xmark text-white"></i>
+          </button>
+      </div>
+
+      {/* Main Content and Sidebar Container */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Pane: Chat-style content */}
+        <div className="flex-1 relative overflow-y-auto p-6 space-y-4">
+          {/* Persistent Prompt Input Area */}
+          <div className="p-4 rounded-lg bg-dark-gray sticky top-0 z-10 shadow-lg">
+            <h3 className="font-bold text-lg text-neon-green font-varela">Simulate a Reality</h3>
+            <p className="text-sm text-gray-400">
+                Enter a simple "what-if" question below to begin a new reality simulation.
+            </p>
+            <div className="mt-4 flex space-x-2">
+                <input
+                  type="text"
+                  placeholder="e.g., Should I wear a cap today in 80 degrees?"
+                  className="flex-1 px-3 py-2 rounded-lg bg-custom-black border border-glowing-violet text-white text-sm focus:outline-none focus:border-neon-green"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSimulate()}
+                />
+                <button
+                  onClick={handleSimulate}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-neon-green text-custom-black rounded-lg font-bold disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
+                >
+                  Simulate
+                </button>
+            </div>
+            {isLoading && (
+              <div className="mt-2 text-center text-cyan-400">
+                  <i className="fas fa-spinner fa-spin mr-2"></i>
+                  <span className="text-sm">Tuning into possibilities...</span>
+              </div>
+            )}
+          </div>
+
+          {/* Dynamic Chat History */}
+          <div className="space-y-4">
+            {history.map((nodeId, index) => {
+              const node = allNodes[nodeId];
+              if (!node) return null;
+              
+              const isCurrent = nodeId === history[history.length - 1];
+              const isCrossroad = visitedPaths.has(nodeId);
+
+              return (
+                <div key={node.id} className="relative">
+                  <div className={`w-full p-4 rounded-lg shadow-lg relative transition-all duration-300 ${isCurrent ? 'bg-darker-violet animate-pulse' : 'bg-dark-gray'}`}>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <i className={`fas fa-git-branch ${isCurrent ? 'text-white' : 'text-cyan-400'}`}></i>
+                      <h3 className={`font-bold text-lg ${isCurrent ? 'text-white' : 'text-neon-green'} font-varela`}>{node.title}</h3>
+                      {isCrossroad && <div className="ml-auto"><i className="fas fa-check-circle text-green-500"></i></div>}
+                    </div>
+                    <p className={`text-sm leading-relaxed ${isCurrent ? 'text-white' : 'text-gray-400'}`}>{node.description}</p>
+                  </div>
+                  {isCurrent && node.options.length > 0 && (
+                    <div className="mt-4 flex flex-col space-y-2">
+                      {node.options.map((option, optionIndex) => (
+                        <button
+                          key={option.id}
+                          className="w-full px-4 py-3 bg-darker-violet hover:bg-opacity-80 rounded-lg text-white text-left transition-colors font-bold"
+                          onClick={() => generateNewScenario(option.text)}
+                        >
+                          {option.text}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right Pane: Flowchart Sidebar */}
+        <div className={`w-80 bg-deep-purple p-4 border-l border-glowing-violet overflow-y-auto transition-all duration-300 transform lg:translate-x-0 absolute inset-y-0 right-0 lg:static z-20 ${isFlowchartSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg text-neon-green font-bold font-varela">Flowchart</h4>
+            <button onClick={toggleSidebar} className="lg:hidden p-1 rounded-full hover:bg-glowing-violet z-20">
+                <i className="fas fa-xmark text-white"></i>
+            </button>
+          </div>
+          {Object.keys(allNodes).length === 0 ? (
+            <p className="text-gray-400 italic text-center">No reality flows to visualize yet.</p>
+          ) : (
+            <svg ref={flowchartSvgRef} className="w-full h-full"></svg>
+          )}
+        </div>
+      </div>
+      
+      {/* Footer Navigation */}
+      <div className="p-4 border-t border-glowing-violet flex items-center justify-between">
+        <div className="flex space-x-2">
+          <button
+            onClick={handleGoBack}
+            disabled={history.length <= 1}
+            className="flex items-center space-x-2 px-3 py-1 rounded-full transition-colors bg-transparent border border-neon-green text-neon-green hover:bg-neon-green hover:text-custom-black disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
+          >
+            <i className="fas fa-arrow-left-long"></i>
+            <span className="text-sm">Go Back</span>
+          </button>
+          
+          <button
+            onClick={toggleSidebar}
+            className="flex items-center space-x-2 px-3 py-1 bg-dark-teal hover:bg-opacity-80 rounded-full text-white transition-colors"
+          >
+            <i className="fas fa-git-branch"></i>
+            <span className="text-sm">Flowchart</span>
+            <i className={`fas ${isFlowchartSidebarOpen ? 'fa-chevron-down' : 'fa-chevron-right'}`}></i>
+          </button>
+        </div>
+        
+        <button className="flex items-center space-x-2 px-3 py-1 bg-neon-green text-custom-black rounded-full font-bold transition-colors">
+            <i className="fas fa-play"></i>
+            <span className="text-sm">Start Flow</span>
         </button>
       </div>
-      
-      <div className="p-4 border-b border-glowing-violet">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <GitBranch className="w-5 h-5 text-cyan" />
-            <span className="text-cyan text-sm">Exploring Parallel Realities</span>
-          </div>
-          <button
-            onClick={startConsciousnessFlow}
-            className="flex items-center space-x-2 px-3 py-1 bg-glowing-violet hover:bg-opacity-80 rounded text-white transition-colors"
-          >
-            <Play className="w-4 h-4" />
-            <span className="text-sm">Flow</span>
-          </button>
-        </div>
-      </div>
-      
-      <div className="flex-1 relative overflow-hidden nebula-bg">
-        {/* Reality Tree Visualization */}
-        <svg className="absolute inset-0 w-full h-full">
-          {/* Connections between nodes */}
-          {nodes.map(node => 
-            node.children.map(childId => {
-              const child = nodes.find(n => n.id === childId);
-              if (!child) return null;
-              return (
-                <line
-                  key={`${node.id}-${childId}`}
-                  x1={`${node.x}%`}
-                  y1={`${node.y}%`}
-                  x2={`${child.x}%`}
-                  y2={`${child.y}%`}
-                  stroke="#8a2be2"
-                  strokeWidth="2"
-                  className="opacity-60"
-                />
-              );
-            })
-          )}
-          
-          {/* Consciousness Bus Animation */}
-          {consciousnessFlow && (
-            <circle
-              r="4"
-              fill="#39ff14"
-              className="animate-consciousness-flow"
-            >
-              <animateMotion
-                dur="3s"
-                repeatCount="1"
-                path="M 50,20 L 20,50 L 10,80"
-              />
-            </circle>
-          )}
-        </svg>
-        
-        {/* Reality Nodes */}
-        {nodes.map(node => (
-          <button
-            key={node.id}
-            onClick={() => handleNodeClick(node)}
-            className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-2 transition-all duration-300 ${
-              node.isActive 
-                ? 'bg-neon-green border-neon-green animate-pulse-glow' 
-                : 'bg-dark-gray border-glowing-violet hover:border-neon-green hover:bg-glowing-violet hover:bg-opacity-20'
-            }`}
-            style={{ left: `${node.x}%`, top: `${node.y}%` }}
-          >
-            <Eye className={`w-6 h-6 mx-auto ${node.isActive ? 'text-black' : 'text-white'}`} />
-          </button>
-        ))}
-        
-        {/* Node Labels */}
-        {nodes.map(node => (
-          <div
-            key={`label-${node.id}`}
-            className="absolute transform -translate-x-1/2 text-center pointer-events-none"
-            style={{ left: `${node.x}%`, top: `${node.y + 8}%` }}
-          >
-            <span className="text-xs text-cyan font-orbitron bg-black bg-opacity-50 px-2 py-1 rounded">
-              {node.title}
-            </span>
-          </div>
-        ))}
-      </div>
-      
-      {/* Node Details Modal */}
-      {selectedNode && (
-        <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-deep-purple border border-glowing-violet rounded-lg p-6 max-w-md w-full mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-orbitron text-lg font-bold text-neon-green">{selectedNode.title}</h3>
-              <button
-                onClick={() => setSelectedNode(null)}
-                className="p-1 hover:bg-glowing-violet rounded transition-colors"
-              >
-                <X className="w-5 h-5 text-white" />
-              </button>
-            </div>
-            
-            <p className="text-white mb-6 leading-relaxed">{selectedNode.description}</p>
-            
-            <div className="flex space-x-3">
-              <button
-                onClick={() => handleSelectPath(selectedNode.id)}
-                className="flex-1 py-2 bg-neon-green text-black rounded-lg font-bold hover:bg-opacity-80 transition-colors"
-              >
-                Select this Path
-              </button>
-              <button
-                onClick={() => setSelectedNode(null)}
-                className="px-4 py-2 bg-dark-gray text-white rounded-lg hover:bg-glowing-violet transition-colors"
-              >
-                Explore More
-              </button>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <p className="text-cyan text-xs">
-                Consciousness flows through infinite possibilities...
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
