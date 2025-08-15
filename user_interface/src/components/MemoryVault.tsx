@@ -57,9 +57,15 @@ const mockMemories: Memory[] = [
 
 const MemoryVault: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [activeLobe, setActiveLobe] = useState<Lobe | null>(null);
+  const [showRightPanel, setShowRightPanel] = useState(false);
 
   const handleLobeClick = (lobe: Lobe) => {
     setActiveLobe(lobe);
+    setShowRightPanel(true);
+  };
+
+  const handleCloseRightPanel = () => {
+    setShowRightPanel(false);
   };
 
   const getLobePosition = (index: number) => {
@@ -74,13 +80,7 @@ const MemoryVault: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const renderActiveLobeView = () => {
     if (!activeLobe) {
-      return (
-        <div className="flex flex-col items-center justify-center h-full text-center p-4">
-          <p className="text-gray-400 font-orbitron animate-pulse">
-            Select a lobe to dive into GG's consciousness streams.
-          </p>
-        </div>
-      );
+      return null;
     }
     return (
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -116,14 +116,14 @@ const MemoryVault: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col relative">
       <div className="p-4 border-b border-glowing-violet flex items-center justify-between">
         <h2 className="font-orbitron text-lg font-bold text-neon-green">Memory Vault</h2>
         <button onClick={onClose} className="p-1 hover:bg-glowing-violet rounded-full">
           <X className="w-5 h-5 text-white" />
         </button>
       </div>
-      <div className="flex-1 p-8 flex flex-col items-center justify-center">
+      <div className="flex-1 p-8 flex flex-col items-center justify-center relative">
         <div className="relative w-[500px] h-[500px]">
           <div
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
@@ -151,7 +151,15 @@ const MemoryVault: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           ))}
         </div>
       </div>
-      <div className="flex-1 bg-deep-purple border-t border-glowing-violet overflow-y-auto">
+      
+      {/* Right Sidebar for Lobe Content */}
+      <div className={`absolute top-0 right-0 h-full w-1/2 bg-deep-purple border-l border-glowing-violet shadow-2xl transition-transform duration-500 transform ${showRightPanel ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="p-4 border-b border-glowing-violet flex items-center justify-between">
+            <h2 className="font-orbitron text-lg font-bold text-neon-green">Lobe Details</h2>
+            <button onClick={handleCloseRightPanel} className="p-1 hover:bg-glowing-violet rounded-full">
+                <X className="w-5 h-5 text-white" />
+            </button>
+        </div>
         {renderActiveLobeView()}
       </div>
     </div>
