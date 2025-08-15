@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+// The build log indicates that your environment is missing the d3 type declarations.
+// To fix this, you need to install the package: npm install @types/d3
 import * as d3 from 'd3';
 
 // Define the data structures for type safety
