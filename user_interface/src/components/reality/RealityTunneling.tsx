@@ -28,7 +28,7 @@ const RealityTunneling: React.FC = () => {
   const flowchartSvgRef = useRef<SVGSVGElement>(null);
   const d3SvgRef = useRef<d3.Selection<SVGSVGElement | null, unknown, null, undefined> | null>(null);
   const d3gRef = useRef<d3.Selection<SVGGElement, unknown, null, undefined> | null>(null);
-  const d3TreeRef = useRef<d3.TreeLayout<d3.HierarchyNode<NodeData>> | null>(null);
+  const d3TreeRef = useRef<d3.TreeLayout<NodeData> | null>(null);
   
   // D3.js initialization
   useEffect(() => {
@@ -157,8 +157,9 @@ const RealityTunneling: React.FC = () => {
         console.error("Could not find root node for flowchart.");
         return;
     }
-
-    const data = d3.hierarchy(rootNode, d => {
+    
+    // Add type annotation to the d parameter
+    const data = d3.hierarchy(rootNode, (d: NodeData) => {
         const childNodes: NodeData[] = [];
         Object.values(allNodes).forEach(node => {
           const hasParent = node.options.some(opt => opt.parent === d.id);
@@ -182,40 +183,48 @@ const RealityTunneling: React.FC = () => {
         .attr("fill", "none")
         .attr("stroke", "var(--glowing-violet)")
         .attr("stroke-width", 2)
-        .attr("d", d3.linkVertical()
-            .x(d => d.x)
-            .y(d => d.y));
+        // Add type annotation to the d parameter
+        .attr("d", d3.linkVertical<d3.HierarchyPointLink<NodeData>>()
+            .x((d: d3.HierarchyPointNode<NodeData>) => d.x)
+            .y((d: d3.HierarchyPointNode<NodeData>) => d.y));
 
     const node = d3gRef.current.selectAll(".node")
         .data(nodes)
         .join("g")
         .attr("class", "node")
-        .attr("transform", d => `translate(${d.x},${d.y})`);
+        // Add type annotation to the d parameter
+        .attr("transform", (d: d3.HierarchyPointNode<NodeData>) => `translate(${d.x},${d.y})`);
 
     node.append("circle")
         .attr("r", 10)
         .attr("fill", "var(--neon-green)")
         .attr("stroke", "var(--glowing-violet)")
         .attr("stroke-width", 2)
-        .on("click", (event, d) => handleGoToNode(d.data.id));
+        // Add type annotation to the event and d parameters
+        .on("click", (event: MouseEvent, d: d3.HierarchyPointNode<NodeData>) => handleGoToNode(d.data.id));
 
     node.append("text")
         .attr("dy", "-1.5em")
         .attr("text-anchor", "middle")
         .attr("font-size", "10px")
         .attr("fill", "white")
-        .text(d => d.data.title);
+        // Add type annotation to the d parameter
+        .text((d: d3.HierarchyPointNode<NodeData>) => d.data.title);
 
     node.append("text")
         .attr("dy", "0.5em")
         .attr("text-anchor", "middle")
         .attr("font-size", "16px")
-        .attr("fill", d => history.includes(d.data.id) ? "var(--neon-green)" : "transparent")
-        .html(d => history.includes(d.data.id) ? '<i class="fas fa-check-circle"></i>' : '');
+        // Add type annotation to the d parameter
+        .attr("fill", (d: d3.HierarchyPointNode<NodeData>) => history.includes(d.data.id) ? "var(--neon-green)" : "transparent")
+        // Add type annotation to the d parameter
+        .html((d: d3.HierarchyPointNode<NodeData>) => history.includes(d.data.id) ? '<i class="fas fa-check-circle"></i>' : '');
 
     // Center the tree
-    const minX = d3.min(nodes, d => d.x) || 0;
-    const maxX = d3.max(nodes, d => d.x) || 0;
+    // Add type annotation to the d parameter
+    const minX = d3.min(nodes, (d: d3.HierarchyPointNode<NodeData>) => d.x) || 0;
+    // Add type annotation to the d parameter
+    const maxX = d3.max(nodes, (d: d3.HierarchyPointNode<NodeData>) => d.x) || 0;
     const treeWidth = maxX - minX;
     d3gRef.current.attr("transform", `translate(${svgWidth / 2 - minX - treeWidth / 2}, 20)`);
   
