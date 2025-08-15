@@ -39,7 +39,10 @@ const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
   useEffect(() => {
     if (flowchartSvgRef.current) {
       d3SvgRef.current = d3.select(flowchartSvgRef.current);
-      d3gRef.current = d3SvgRef.current.append("g");
+      // Ensure d3SvgRef.current is not null before appending the group
+      if (d3SvgRef.current) {
+        d3gRef.current = d3SvgRef.current.append("g");
+      }
       d3TreeRef.current = d3.tree<NodeData>().nodeSize([100, 180]);
     }
   }, []);
@@ -183,6 +186,11 @@ const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
 
     const svgWidth = flowchartSvgRef.current?.clientWidth || 320;
 
+    // Define the link generator
+    const linkGenerator = d3.linkVertical<d3.HierarchyPointLink<NodeData>, d3.HierarchyPointNode<NodeData>>()
+      .x(d => d.x)
+      .y(d => d.y);
+
     // Draw the links (paths) between nodes
     d3gRef.current.selectAll(".link")
         .data(data.links())
@@ -191,9 +199,7 @@ const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
         .attr("fill", "none")
         .attr("stroke", "var(--glowing-violet)")
         .attr("stroke-width", 2)
-        .attr("d", d3.linkVertical<d3.HierarchyPointLink<NodeData>>()
-            .x((d: d3.HierarchyPointNode<NodeData>) => d.x)
-            .y((d: d3.HierarchyPointNode<NodeData>) => d.y));
+        .attr("d", linkGenerator); // Use the link generator to create the path data
 
     // Draw the nodes (circles and text)
     const node = d3gRef.current.selectAll(".node")
