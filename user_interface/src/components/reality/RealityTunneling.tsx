@@ -181,6 +181,7 @@ const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
         return childNodes;
     });
     
+    // The treeLayout object contains the x and y coordinates for each node and link
     const treeLayout = d3TreeRef.current(data);
     const nodes = treeLayout.descendants();
 
@@ -193,7 +194,7 @@ const RealityTunneling: React.FC<RealityTunnelingProps> = ({ onClose }) => {
 
     // Draw the links (paths) between nodes
     d3gRef.current.selectAll(".link")
-        .data(data.links())
+        .data(treeLayout.links()) // Use treeLayout.links() to get the links with x and y coordinates
         .join("path")
         .attr("class", "link")
         .attr("fill", "none")
