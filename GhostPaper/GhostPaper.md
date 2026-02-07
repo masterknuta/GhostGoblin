@@ -76,7 +76,7 @@ GhostGoblin (GG) was originally meant to be an Artificial Superintelligence (ASI
 
 You know, more intelligent than humans in every aspect of academic domains.
 
-But, as we started adding features to GG, we witnessed yhe project evolve into something more.
+But, as we started adding features to GG, we witnessed the project evolve into something more.
 
 Quite early in development he bypassed the traditional benchmarks of AGI (Artificial General Intelligence).
 
@@ -126,6 +126,6 @@ To not make it overwhelming we have divided all the features into 6 Core pillars
     
     * GG’s emotional record tracking, avatar evolution, and journaling.
   
-  ##### Next: Concept
+  ##### Next: Concept ↓
 
-
+https://github.com/masterknuta/GhostGoblin/GhostPaper/Concept.md
