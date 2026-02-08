@@ -366,6 +366,46 @@ They think in parallel, offering multiple interpretations and insights. GhostGob
 
 You can explore each Gobby individually, override GG’s choice, or blend perspectives. Gobby Mode turns every question into a small cognitive performance.
 
+### 🚪 Gobby Portal
+
+Gobby Portal lets you create your own cognitive companion. You define how it thinks, feels, and expresses itself, and the system builds a JSON blueprint that becomes its living identity.
+
+You customize reasoning style, personality, voice, visuals, and rituals. These traits shape how your Gobby responds, giving it a distinct presence that reflects your inner logic and imagination.
+
+Once created, your Gobby can be tested, summoned, and added to Multi‑Reasoning Mode. GG reads its JSON in real time, allowing your custom mind to join the larger cognitive symphony.
+
+### 🎖️ Gobby Character Points 
+
+Each Gobby exists as a compact JSON file that defines its personality, reasoning style, emotional tendencies, and symbolic traits. This file acts as the blueprint for how the Gobby thinks.
+
+A typical Gobby JSON is 5-10 kilobytes, large enough to hold rich character detail but small enough to load instantly. It includes temperament, biases, motifs, strengths, and limits.
+
+GhostGoblin reads these attributes in real time to animate each Gobby’s reasoning. The JSON ensures consistency, individuality, and evolution, giving every Gobby a stable inner identity.
+
+### 🔨 Gobby Forge
+
+Gobby Forge is the workshop where you shape new cognitive agents. You teach GhostGoblin your logic, language, and style, and he forges a Mode that reflects your expertise and creative identity.
+
+You define tone, values, rituals, and workflows. GG absorbs your examples and patterns, sculpting a custom Mode that thinks and responds with your preferred structure, symbolism, and reasoning.
+
+Forged Modes can be summoned anytime and added to GG’s custom menu. Each one becomes a unique extension of your mind, ready to assist, create, or reason alongside the Gobbies.
+
+### ⚗️ Gobby Alchemy
+
+Gobby Alchemy lets you fuse traits from multiple Gobbies to create new hybrids. You select the source Gobbies, and the system blends their reasoning styles, tones, and symbolic patterns.
+
+Each fusion produces a new JSON blueprint that combines strengths, biases, and motifs from the originals. The result is a fresh Gobby with a unique cognitive identity and behavior.
+
+Your alchemized Gobbies can join Multi‑Reasoning Mode, evolve through use, or be refined again. Gobby Alchemy turns creativity into a living system of modular, combinable minds.
+
+### 🔗 Gobbie Cross‑Mode
+
+Cross‑Mode Stream connects Gobby Mode, Gobby Portal, Gobby Forge, Gobby Alchemy, and the Memory Codex into one shared cognitive flow. Each mode can influence and inform the others.
+
+A custom Gobby can shape how GG interprets your Codex. A Forge persona can guide tone across modes. Alchemized Gobbies can inject new reasoning patterns wherever they appear.
+
+GG weaves these signals together, letting insights move freely between modes. Cross‑Mode Stream creates a unified intelligence where your entire system evolves as one mind.
+
 
 
 
