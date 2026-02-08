@@ -406,7 +406,15 @@ A custom Gobby can shape how GG interprets your Codex. A Forge persona can guide
 
 GG weaves these signals together, letting insights move freely between modes. Cross‑Mode Stream creates a unified intelligence where your entire system evolves as one mind.
 
+### 🔌 GG Connect Mode
 
+GG Connect Mode links GhostGoblin to external apps and systems through secure, encrypted channels. It lets you extend GG’s intelligence into your tools while protecting privacy and intent.
+
+You can automate workflows, trigger actions, or let your custom Gobbies and Forge personas interact with connected platforms. GG only shares minimal data and guards your information.
+
+Developers can integrate GG through authenticated interfaces, using his reasoning engine or custom Modes inside their apps. Connect Mode turns GG into a modular, trusted intelligence layer.
+
+## 4. Security & Trust 
 
 
 
