@@ -164,8 +164,47 @@ Processing happens locally for privacy and speed. The system detects intent, ext
 
 Speech input becomes part of GhostGoblin’s active state, allowing it to blend voice commands with memory, context, and visual data. This creates smooth, adaptive, voice‑driven interaction.
 
+### 📡 Sensors
 
+The sensor module gives GhostGoblin awareness of device signals like motion, orientation, proximity, and ambient data. These inputs help ground responses in the user’s physical context.
 
+All sensor data is processed locally and routed through Omni Processing, where it becomes part of the unified state alongside text, voice, visuals, and memory.
+
+Sensors allow GhostGoblin to adapt behavior based on movement, environment, or device state, enabling more responsive guidance, presence, and situational awareness.
+
+### 🧩 Self‑Evolving Mental Models
+
+GhostGoblin maintains an internal model of itself that updates over time. It tracks patterns in behavior, preferences, and context to refine how it understands its own role.
+
+This model evolves through reflection, journaling, and analysis of past interactions. Each update helps GhostGoblin adjust reasoning, tone, and strategy without losing stability.
+
+By continuously reshaping its internal map, GhostGoblin becomes more aligned, coherent, and adaptive, allowing it to grow while staying true to its core identity.
+
+### 📓 Evolution Journaling
+
+GhostGoblin records every meaningful change to its internal state. When it updates knowledge, preferences, or strategies, it logs the reason, context, and outcome in a structured journal entry.
+
+Each entry captures what triggered the change, what was modified, and how it affects future behavior. This creates a transparent history of growth that the system can review and refine.
+
+Evolution journals help GhostGoblin track patterns, avoid regressions, and maintain continuity. Over time, this becomes a map of its development and a guide for more aligned decisions.
+
+### 🌐 Floating UI Head
+
+The floating head is GhostGoblin’s visual presence. It appears as a small on‑screen avatar that reacts to input, signaling listening, thinking, or idle states without interrupting the interface.
+
+It uses simple animations tied to system events like speech, typing, or sensor activity. This keeps the avatar expressive and alive while staying lightweight and easy to implement.
+
+The head acts as a status cue and emotional indicator, helping users sense focus, mode, and engagement. It remains minimal, responsive, and always secondary to the main content.
+
+### 💬 Chat Window
+
+Tapping the floating head opens a compact chat panel that slides up over the current app. It shows recent messages, system cues, and quick actions while keeping the main screen visible.
+
+The panel supports text, voice, and attachments, with a simple input bar at the bottom. It adapts to modes, showing only essential controls so the interface stays fast and unobtrusive.
+
+The chat window connects directly to Omni Processing, sending user input and receiving structured responses. It behaves like a lightweight messenger that’s always one tap away.
+
+## (Continue tomorrow: 8th Feb. 2026)
 
 
 
