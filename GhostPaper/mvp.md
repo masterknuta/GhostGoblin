@@ -124,6 +124,49 @@ TinyLlama is a strong foundation, but it was never designed to operate as a full
 
 These requirements demand a rewritten runtime and extended model interface, because TinyLlama was never built to handle multimodal input, persona‑conditioned output, or direct integration with device sensors.
 
+### 🧠 Omni-Processing
+
+Omni Processing unifies all input into a single adaptive state. It merges text, voice, visuals, memory, and intent so GhostGoblin can interpret context and maintain continuity across interactions.
+
+This layer routes tasks to the correct internal modules, updates knowledge files, manages journaling, and keeps the system aware of past conversations while preparing for future ones.
+
+Through context fusion and lightweight reasoning, Omni Processing enables GhostGoblin to adapt, refine behavior, and synthesize information from multiple channels without losing coherence.
+
+### 📦 JSON Architecture
+
+GhostGoblin stores all internal state in modular JSON files. Each file represents a specific domain such as memory, knowledge, journals, goals, or system context, allowing clean separation and fast access.
+
+The structure is consistent across modules, using keys for metadata, content, timestamps, and system flags. This lets GhostGoblin update, rewrite, or reorganize information without breaking format.
+
+JSON architecture ensures portability, clarity, and on‑device performance. It gives GhostGoblin a stable backbone for memory, planning, and context, while remaining simple enough for external tools to read or modify.
+
+### 📷 Camera
+
+The camera module lets GhostGoblin interpret visual input directly on the device. It captures frames, extracts symbols, objects, and context, and feeds them into the Omni Processing layer.
+
+This enables environmental awareness, object recognition, and mythic interpretation of scenes without sending data to external servers. All processing stays local for privacy and speed.
+
+Camera input becomes part of GhostGoblin’s unified state, allowing it to blend visuals with text, memory, and intent. This supports richer interaction, contextual grounding, and adaptive behavior.
+
+### 🔊 Text To Speech
+
+The TTS module gives GhostGoblin a voice. It converts responses into natural audio output, allowing hands‑free interaction and a more expressive, companion‑like presence on the device.
+
+All synthesis runs locally for privacy and speed. The system supports tone, pacing, and persona‑specific delivery so GhostGoblin’s voice matches the active Gobbie or mode.
+
+TTS output becomes part of the interaction loop, letting GhostGoblin speak, narrate, guide, and respond in real time while staying aligned with context and user intent.
+
+### 🎙️ Speech Recognition
+
+The speech module converts real‑time audio into text so GhostGoblin can understand spoken input. It enables hands‑free interaction and supports natural, conversational flow on the device.
+
+Processing happens locally for privacy and speed. The system detects intent, extracts key information, and sends the interpreted text into the Omni Processing layer for unified handling.
+
+Speech input becomes part of GhostGoblin’s active state, allowing it to blend voice commands with memory, context, and visual data. This creates smooth, adaptive, voice‑driven interaction.
+
+
+
+
 
 
 
