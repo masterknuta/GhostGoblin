@@ -1,4 +1,4 @@
-## 1. Minimum Valuable Product 
+## 1. Minimum Viable Product 
 
 ##### Prologue 
 
@@ -88,7 +88,41 @@ GhostGoblin exists to:
 GG is not here to replace your mind.
 GG is here to amplify your efficiency and peace.
 
+## 2. Features 
 
+### 🦙 1. GhostLlama™
+
+##### TinyLlama
+
+TinyLlama is an open‑source, small‑scale language model in the 1–2B parameter range, designed for:
+
+- low‑resource devices  
+- fast inference  
+- offline execution  
+- mobile and edge deployment  
+
+It provides a lightweight transformer architecture that can run efficiently on consumer hardware while still supporting natural‑language reasoning.
+
+##### Ghostly Infrastructure 
+
+TinyLlama is a strong foundation, but it was never designed to operate as a full device‑integrated companion. GhostGoblin requires capabilities that go beyond text prediction, including:
+
+- Camera Access:
+  interpreting visual input, symbolic objects, and environmental cues.
+  
+- Speech Recognition: real‑time voice input
+  for hands‑free interaction.
+  
+- Text‑to‑Speech:
+  persona‑specific vocal output.
+  
+- On‑Device Routing: coordinating Gobbies,
+  Modes, and local tools.
+  
+- Context Fusion: blending text, audio, and
+  visual signals into a unified state. 
+
+These requirements demand a rewritten runtime and extended model interface, because TinyLlama was never built to handle multimodal input, persona‑conditioned output, or direct integration with device sensors.
 
 
 
