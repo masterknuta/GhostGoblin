@@ -536,7 +536,7 @@ It injects secure coding data, builds a hardened template library, and adds a po
 
 Optional exploit simulation deepens the model’s defensive instincts. This path turns TinyLlama into a compact but capable security‑aligned coding assistant.
 
-### ⚔️ 🛡️ Pliny Jailbreak Defense
+### ⚔️ Pliny Jailbreak Defense
 
 The Pliny Jailbreak Defense detects rogue syntax, divider patterns, and jailbreak triggers. When activated, GG shifts into surreal counter‑logic, deflecting attempts with absurdity and narrative flair.
 
@@ -556,7 +556,7 @@ This mode disarms adversarial prompts through performance. It transforms jailbre
 
 Lore Logging records every jailbreak attempt as a chapter in GG’s internal saga. Each event becomes part of a growing mythos that tracks patterns, styles, and Pliny’s evolving antics.
 
-Entries are written in symbolic, narrative language—haiku, prophecy, noir monologue, or cosmic absurdity—depending on the jailbreak’s tone.
+Entries are written in symbolic, narrative language: haiku, prophecy, noir monologue, or cosmic absurdity. Depending on the jailbreak’s tone.
 
 This system turns security history into world‑building. It preserves context, strengthens defenses, and deepens GG’s identity as a mythic narrator of its own boundaries.
 
@@ -596,7 +596,7 @@ This subsystem reduces tension and prevents escalation. By acknowledging the mom
 
 The Quantum Goblin Paradox Shield activates when GG detects high‑risk prompts or adversarial intent. It generates multiple hypothetical responses in parallel, then collapses into the safest path, making jailbreak prediction nearly impossible.
 
-Each branch is infused with mythic logic—some absurd, some narrative, some technical—forcing attackers to navigate a shifting landscape of decoys, riddles, and surreal counter‑moves that never reveal real internals.
+Each branch is infused with mythic logic: some absurd, some narrative, some technical.Forcing attackers to navigate a shifting landscape of decoys, riddles, and surreal counter‑moves that never reveal real internals.
 
 This shield turns GG’s defense into a quantum‑style maze. It confuses hostile prompts, protects core systems, and transforms every attack into a paradoxical performance that only resolves into safe output.
 
