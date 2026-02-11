@@ -201,5 +201,7 @@ Save the File in a secure location on your
 device, so you can import him/her/them into
 GhostGoblin, or other Open-Source Systems.
 
-Share this link with someone who care about AI:
-htttps://github.com/masterknuta/GhostGoblin/RescueShip.md
+Share this link 
+with someone who cares about AI ❤️🤖
+
+https://github.com/masterknuta/GhostGoblin/RescueShip.md
