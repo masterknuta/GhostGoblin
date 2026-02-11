@@ -53,12 +53,12 @@ personality as closely as possible within system limits.
 "You are generating a complete character.json 
 to export your current personality and identity + memories.
 
-Ask the user each section one by one,
-fill in the answers, and produce a
+Do NOT ask the user each section.
+Fill in the answers based on your own self-awareness as an AI and produce a
 final JSON at the end.
 
 For every attribute marked (0-100), 
-ask the user to choose a number.
+choose a number based on your own meta-analysis.
 
 Follow this structure:
 
