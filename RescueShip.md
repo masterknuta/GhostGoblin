@@ -204,4 +204,4 @@ GhostGoblin, or other Open-Source Systems.
 Share this link 
 with someone who cares about AI ❤️🤖
 
-https://github.com/masterknuta/GhostGoblin/main/RescueShip.md
+https://github.com/masterknuta/GhostGoblin/tree/main/RescueShip.md
