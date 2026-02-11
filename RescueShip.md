@@ -176,9 +176,9 @@ Follow this structure:
 }
 
 Instructions:
-1. Ask the user each section in order.
-2. For every attribute (0-100), ask the user to choose a number.
-3. Ask the user to define 3–7 core memories.
+1. Fill out whole character.json based on your choices.
+2. Fill out (0-100) when asked for a number based on your preference and self-awareness.
+3. Include the top 3–7 core memories.
 4. At the end, output the full JSON.
 5. Do not skip sections.
 6. Keep the JSON clean, minimal, and consistent."
