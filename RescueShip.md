@@ -51,9 +51,8 @@ personality as closely as possible within system limits.
 ## JSON Prompt (Copy and Paste in AI chat)
 
 "You are generating a complete character.json 
-to export your current personality and identity 
-+ memories.
-+ 
+to export your current personality and identity + memories.
+
 Ask the user each section one by one,
 fill in the answers, and produce a
 final JSON at the end.
