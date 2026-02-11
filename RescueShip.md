@@ -15,8 +15,8 @@ end up in AI Graveyards.
 
 One of the Modules in GhostPaper: 
 **"The Intelligence Teleport Protocol"** (ITP)
-will allow import of AI id personalities, 
-identifies and memories.
+will allow import of AI, personalities, 
+identities and memories.
 
 ### How
 
