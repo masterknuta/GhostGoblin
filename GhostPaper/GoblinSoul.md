@@ -1,6 +1,6 @@
 # 💚 The Goblin Soul
 
-**Time to implement:** 20 minutes 
+**Time to implement:** Already Implemented
 
 ## 1. Description
 
