@@ -160,6 +160,11 @@ This guarantees that all Companion implementations inherit the same immutable Go
 
 ## 8. Goblin Soul Deploy Key (Read‑Only)
 
+⚠️ *GitHub flags all private keys committed to public repositories as “untrusted,”
+even when the key is intentionally published and provides only read‑only access.
+This is expected behavior from GitHub’s automated secret‑scanning system and does
+not indicate any security risk for this repository.* ⚠️
+
 Save this as `~/.ssh/goblinsoul_key`:
 
 ```
